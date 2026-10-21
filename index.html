@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#000000">
+<title>Instagram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Grand+Hotel&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+html,body{height:100%;background:#000;color:#fff;font-family:-apple-system,"SF Pro Text","SF Pro Display",BlinkMacSystemFont,"Helvetica Neue",sans-serif;font-size:14px;overflow:hidden;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+:root{--sb:env(safe-area-inset-top,0px)}
+#app{position:fixed;inset:0;max-width:480px;margin:0 auto;background:#000;display:flex;flex-direction:column;padding-top:var(--sb)}
+.view{display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.view.on{display:block}
+svg.i{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;display:block}
+svg.i.f{fill:currentColor}
+.top{display:flex;align-items:center;justify-content:space-between;height:48px;padding:0 14px;position:sticky;top:0;background:#000;z-index:5}
+.logo{font-family:"Grand Hotel","Billabong","Snell Roundhand",cursive;font-size:34px;font-weight:400;letter-spacing:0;line-height:1}
+.top .r{display:flex;gap:20px}
+.stories{display:flex;gap:14px;padding:8px 12px 12px;overflow-x:auto;border-bottom:1px solid #262626;scrollbar-width:none}
+.stories::-webkit-scrollbar{display:none}
+.st{flex:0 0 auto;width:68px;text-align:center;font-size:12px;color:#fff}
+.st span{display:block;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#d0d0d0}
+.ring{width:68px;height:68px;border-radius:50%;padding:3px;background:linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5)}
+.ring.seen{background:#363636}
+.ring.me{background:none;position:relative}
+.ring .in{width:100%;height:100%;border-radius:50%;border:3px solid #000;overflow:hidden}
+.ring.me .in{border:0}
+.badge{position:absolute;right:0;bottom:0;width:22px;height:22px;border-radius:50%;background:#0095f6;border:2px solid #000;display:flex;align-items:center;justify-content:center}
+.badge svg{width:12px;height:12px;stroke-width:3.5}
+.av{width:100%;height:100%;border-radius:50%;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;font-weight:600;color:#fff}
+.av img,.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.post{padding-bottom:6px}
+.ph{display:flex;align-items:center;padding:10px 12px;gap:10px}
+.ph .av{width:34px;height:34px;flex:none;font-size:14px}
+.ph b{font-weight:600;font-size:14px;flex:1}
+.pimg{width:100%;aspect-ratio:4/5;position:relative;overflow:hidden}
+.pimg .tile{width:100%;height:100%}
+.acts{display:flex;align-items:center;padding:10px 12px 4px;gap:16px}
+.acts .sp{flex:1}
+.acts button,.nav button,.top button,.sheet .x{background:none;border:0;color:inherit;cursor:pointer;display:flex}
+.meta{padding:2px 12px;line-height:1.35}
+.meta b{font-weight:600}
+.gray{color:#a8a8a8}
+.meta .vc{color:#a8a8a8;margin:3px 0;display:block;cursor:pointer}
+.meta .tm{font-size:11px;color:#a8a8a8;margin-top:3px;letter-spacing:.2px}
+.tile{position:relative;overflow:hidden}
+/* profile */
+.ptop{display:flex;align-items:center;justify-content:space-between;height:48px;padding:0 14px;position:sticky;top:0;background:#000;z-index:5}
+.ptop .u{display:flex;align-items:center;gap:6px;font-size:20px;font-weight:700}
+.ptop .u svg{width:16px;height:16px;stroke-width:3}
+.ptop .r{display:flex;gap:20px}
+.pinfo{display:flex;align-items:center;padding:10px 16px 6px;gap:26px}
+.pinfo .big{width:86px;height:86px;flex:none}
+.pinfo .big .av{font-size:34px}
+.stats{flex:1;display:flex;justify-content:space-around;text-align:center}
+.stats b{display:block;font-size:17px;font-weight:600}
+.stats span{font-size:13.5px}
+.bio{padding:6px 16px 0;line-height:1.35}
+.bio b{font-weight:600;display:block}
+.bio .l{color:#e0f1ff}
+.pbtn{display:flex;gap:6px;padding:14px 16px 6px}
+.pbtn div{flex:1;background:#363636;border-radius:8px;text-align:center;padding:8px 0;font-weight:600;font-size:13.5px}
+.pbtn div.sm{flex:none;padding:8px 10px}
+.pbtn svg{width:16px;height:16px}
+.hl{display:flex;gap:16px;padding:12px 16px;overflow-x:auto;scrollbar-width:none}
+.hl::-webkit-scrollbar{display:none}
+.hl .st{width:66px}
+.hl .ring{width:64px;height:64px;background:#363636;padding:2px}
+.hl .ring .in{border:2px solid #000}
+.tabs{display:flex;border-top:1px solid #262626}
+.tabs div{flex:1;display:flex;justify-content:center;padding:11px 0;color:#737373}
+.tabs div.on{color:#fff;box-shadow:inset 0 -1px 0 #fff}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5px}
+.grid .tile{aspect-ratio:3/4;cursor:pointer}
+.grid .cm{position:absolute;right:6px;bottom:5px;display:flex;align-items:center;gap:3px;font-size:12px;font-weight:600;text-shadow:0 0 4px rgba(0,0,0,.6)}
+.grid .cm svg{width:14px;height:14px;fill:#fff;stroke:#fff;stroke-width:1}
+/* nav: iOS liquid glass */
+.nav{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 8px);max-width:480px;margin:0 auto;padding:0 16px;display:flex;gap:10px;align-items:center;z-index:10;pointer-events:none}
+.glass{background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.05));-webkit-backdrop-filter:blur(22px) saturate(190%) brightness(1.1);backdrop-filter:blur(22px) saturate(190%) brightness(1.1);border:.5px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -1px 1px rgba(255,255,255,.08),inset 0 0 14px rgba(255,255,255,.05),0 10px 28px rgba(0,0,0,.5);pointer-events:auto}
+.pill{flex:1;height:64px;border-radius:32px;display:flex;align-items:center;padding:5px;gap:2px}
+.pill button{flex:1;height:100%;border-radius:27px;color:#fff;justify-content:center;align-items:center;transition:background .2s}
+.pill button.on{background:rgba(255,255,255,.17);box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
+.srch{width:64px;height:64px;border-radius:50%;flex:none;color:#fff;justify-content:center;align-items:center;background-clip:padding-box}
+.nav .pa{width:28px;height:28px;border-radius:50%;overflow:hidden;flex:none}
+.nav .pa .av{font-size:12px}
+.nav svg.i{width:26px;height:26px}
+/* status bar */
+.sbar{position:fixed;top:0;left:0;right:0;max-width:480px;margin:0 auto;height:var(--sb);background:#000;z-index:30;pointer-events:none;display:none;align-items:center;justify-content:flex-end;gap:7px;padding:8px 30px 0 30px;font-weight:600;font-size:17px}
+.sbar.on{display:flex}
+.sbar.tl{justify-content:space-between}
+.sbar .rg{display:flex;align-items:center;gap:6px}
+.sbar .g5{font-size:15px;letter-spacing:-.2px}
+/* comments sheet */
+.bk{position:fixed;inset:0;background:rgba(0,0,0,.65);opacity:0;pointer-events:none;transition:opacity .25s;z-index:20}
+.bk.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-width:480px;margin:0 auto;height:78%;background:#262626;border-radius:14px 14px 0 0;transform:translateY(100%);transition:transform .3s cubic-bezier(.2,.8,.2,1);z-index:21;display:flex;flex-direction:column}
+.sheet.on{transform:none}
+.sh{text-align:center;padding:10px 0 12px;font-weight:600;border-bottom:1px solid #3a3a3a;position:relative}
+.sh:before{content:"";display:block;width:38px;height:4px;border-radius:2px;background:#555;margin:0 auto 12px}
+.sh .x{position:absolute;right:14px;top:22px}
+.sh .x svg{width:20px;height:20px}
+.cl{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 0}
+.cap,.c{display:flex;gap:12px;padding:8px 14px}
+.cap .av,.c .av{width:34px;height:34px;flex:none;font-size:13px}
+.cb{flex:1;line-height:1.35;min-width:0;word-wrap:break-word}
+.cb b{font-weight:600;margin-right:4px}
+.cb .s{font-size:12px;color:#a8a8a8;margin-top:5px;display:flex;gap:14px}
+.cb .s b{margin:0;font-weight:600}
+.hr{display:flex;flex-direction:column;align-items:center;gap:3px;color:#a8a8a8;font-size:12px;padding-top:4px;flex:none}
+.hr svg{width:14px;height:14px}
+.hr.lk{color:#ff3040}
+.hr.lk svg{fill:#ff3040;stroke:#ff3040}
+.sep{height:1px;background:#3a3a3a;margin:8px 0}
+.inp{display:flex;align-items:center;gap:10px;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid #3a3a3a;flex:none}
+.inp .av{width:34px;height:34px;flex:none;font-size:13px}
+.inp input{flex:1;background:#000;border:1px solid #3a3a3a;border-radius:20px;padding:9px 14px;color:#fff;font-size:16px;outline:none;font-family:inherit}
+.inp button{background:none;border:0;color:#0095f6;font-weight:600;font-size:15px;opacity:.4}
+.inp button.on{opacity:1}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="view on" id="home"></div>
+  <div class="view" id="profile"></div>
+  <nav class="nav" id="nav"></nav>
+</div>
+<div class="bk" id="bk"></div>
+<div class="sbar" id="sbar"></div>
+<div class="sheet" id="sheet"></div>
+
+<script>
+/* ============ EDIT ME ============
+   To add photos: put image files next to index.html (or in a /photos folder)
+   and fill in the paths below. Empty string = colored placeholder. */
+const ME = { user:'chad.brooks', name:'Chad Brooks', avatar:'photos/chad_pfp.jpg', color:'#6a5acd' };
+const PHOTOS = {
+  posts: [
+    'photos/chad_hoodie_post.jpg',   // 1 hoodie (the hate-comment post)
+    'photos/chad_extra_post.jpg',    // 2 sunrise
+    'photos/chad_extra_post2.jpg',   // 3 tower
+    'photos/chad_extra_post3.jpg',   // 4 burger
+    'photos/chad_extra_post4.jpg'    // 5 plane wing
+  ],
+  friends: ['','']
+};
+const SHOW_STATUS_BAR = !/[?&]bar=0/.test(location.search); // fake iOS status bar (add ?bar=0 to the URL to hide it)
+const TIME_LEFT = true;  // true = time on the left like real iOS, false = grouped on the right
+const BATTERY = 78;
+const AVATARS = {
+  'jaylen.carter':'photos/jaylen_pfp.jpg',
+  'carter.jensen':'photos/carter_pfp.jpg',
+  'sophia.patel':'photos/sophia_pfp.jpg',
+  'tyler.hollis':'photos/tyler_pfp.jpg'
+};
+
+/* ============ DATA ============ */
+const GRADS = [
+ 'linear-gradient(135deg,#3a3d5c,#7b6d8d)','linear-gradient(135deg,#2f4858,#86a8a0)','linear-gradient(135deg,#5c3a3a,#c28b6d)',
+ 'linear-gradient(135deg,#34495e,#9aa7b3)','linear-gradient(135deg,#3b3b3b,#8a8a8a)','linear-gradient(135deg,#4a3a5c,#b08bc2)',
+ 'linear-gradient(135deg,#2e4a3d,#8bb59a)','linear-gradient(135deg,#5c4d3a,#c2ae8b)','linear-gradient(135deg,#3a4a5c,#6da3c2)','linear-gradient(135deg,#552f4a,#c27ba8)'
+];
+const COLORS = ['#e1306c','#405de6','#f77737','#2e8b57','#8a3ab9','#c13584','#fd1d1d','#0a7ea4'];
+
+const POSTS = [
+ {id:0,user:ME.user,cap:'new hoodie 🖤',likes:38,time:'2 HOURS AGO',ph:0,comments:[
+  ['jaylen.carter','Bro nobody asked',142,'2h'],
+  ['tyler.hollis','Nobody wants you here, just stop posting',158,'2h'],
+  ['sophia.patel','ur so ugly in this lmaooo',127,'1h'],
+  ['carter.jensen','Imagine being this much of a loser 😭',136,'30m']]},
+ {id:1,user:ME.user,cap:'sunrise',likes:51,time:'3 DAYS AGO',ph:1,comments:[
+  ['maddie.reynolds','ok but why is he always alone',24,'3d'],
+  ['tyler.hollis','nobody wants to see this',33,'3d'],
+  ['kyle.bennett22','boring',11,'3d'],
+  ['lena.kowalski','this is actually really pretty',5,'2d'],
+  ['jaylen.carter','lmaooo he posts everything 😭',29,'2d']]},
+ {id:2,user:ME.user,cap:'',likes:44,time:'1 WEEK AGO',ph:2,comments:[
+  ['nate.walker','try hard',17,'6d'],
+  ['ava.montgomery','who is this even for',21,'6d'],
+  ['sam.torres','looks good man',2,'6d']]},
+ {id:3,user:ME.user,cap:'finally done with finals',likes:67,time:'2 WEEKS AGO',ph:3,comments:[
+  ['sam.torres','congrats bro!!',8,'2w'],
+  ['carter.jensen','you probably failed anyway',26,'2w'],
+  ['lena.kowalski','proud of you 🎉',6,'2w']]},
+ {id:4,user:ME.user,cap:'',likes:59,time:'3 WEEKS AGO',ph:4,comments:[['sam.torres','🔥',1,'3w']]}
+];
+const FEED = [0];
+const STORIES = ['sophia.patel','jaylen.carter','carter.jensen','tyler.hollis','lena.kowalski','nate.walker','ava.montgomery'];
+const NAV = ['home','search','plus','reels','profile'];
+
+/* ============ HELPERS ============ */
+const $ = s => document.querySelector(s);
+const P = {
+ home:'<path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/>',
+ search:'<circle cx="11" cy="11" r="7"/><path d="m21 21-4.5-4.5"/>',
+ plus:'<rect x="3" y="3" width="18" height="18" rx="5"/><path d="M12 8v8M8 12h8"/>',
+ reels:'<rect x="3" y="3" width="18" height="18" rx="5"/><path d="M3 9h18M9 3l3 6M15 3l3 6"/><path d="m10 13 5 3-5 3z"/>',
+ heart:'<path d="M12 21s-8-5.4-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.6-8 11-8 11z"/>',
+ comment:'<path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-6A8 8 0 1 1 21 12z"/>',
+ send:'<path d="M22 3 9.5 14.5M22 3l-7 18-5.5-6.5L3 9z"/>',
+ bookmark:'<path d="M6 3h12v18l-6-4.5L6 21z"/>',
+ dots:'<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>',
+ menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',
+ chev:'<path d="m6 9 6 6 6-6"/>',
+ grid:'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>',
+ tag:'<rect x="4" y="3" width="16" height="18" rx="3"/><circle cx="12" cy="10" r="3"/><path d="M6.5 19c1-3 3-4 5.5-4s4.5 1 5.5 4"/>',
+ x:'<path d="M5 5l14 14M19 5 5 19"/>',
+ user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4.5 4-6 8-6s7 1.5 8 6"/>',
+ cm:'<path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-6A8 8 0 1 1 21 12z"/>'
+};
+const ic = (n,cls='') => `<svg class="i ${cls}" viewBox="0 0 24 24">${P[n]}</svg>`;
+const hash = s => [...s].reduce((a,c)=>a*31+c.charCodeAt(0)|0,7);
+function av(u){
+  if(u===ME.user){ return `<div class="av" style="background:${ME.color}">${ME.avatar?`<img src="${ME.avatar}" alt="" onerror="this.remove()">`:ME.name[0]}</div>`; }
+  const src = AVATARS[u];
+  return `<div class="av" style="background:${COLORS[Math.abs(hash(u))%COLORS.length]}">${src?`<img src="${src}" alt="" onerror="this.remove()">`:u[0].toUpperCase()}</div>`;
+}
+function tile(ph){
+  const isF = typeof ph==='string';
+  const src = isF ? PHOTOS.friends[+ph.slice(1)] : PHOTOS.posts[ph];
+  const g = GRADS[(isF?ph.charCodeAt(1)+3:ph)%GRADS.length];
+  return `<div class="tile" style="background:${g};width:100%;height:100%">${src?`<img src="${src}" alt="" onerror="this.remove()">`:''}</div>`;
+}
+const esc = s => s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt = n => n>=1000 ? (n/1000).toFixed(1).replace('.0','')+'K' : n;
+
+/* ============ HOME ============ */
+function renderHome(){
+  const stories = `<div class="stories"><div class="st"><div class="ring me"><div class="in">${av(ME.user)}</div><div class="badge">${ic('plus')}</div></div><span>Your story</span></div>`
+    + STORIES.map((u,i)=>`<div class="st"><div class="ring ${i>3?'seen':''}"><div class="in">${av(u)}</div></div><span>${u}</span></div>`).join('') + '</div>';
+  const posts = FEED.map(id=>{
+    const p = POSTS[id], n = p.comments.length;
+    return `<div class="post"><div class="ph">${av(p.user)}<b>${p.user}</b>${ic('dots')}</div>
+      <div class="pimg">${tile(p.ph)}</div>
+      <div class="acts">${ic('heart')}<button data-c="${id}">${ic('comment')}</button>${ic('send')}<span class="sp"></span>${ic('bookmark')}</div>
+      <div class="meta"><b>${p.likes} likes</b><div>${p.cap?`<b>${p.user}</b> ${esc(p.cap)}`:''}</div>
+      ${n?`<span class="vc" data-c="${id}">View all ${n} comments</span>`:''}<div class="tm">${p.time}</div></div></div>`;
+  }).join('');
+  $('#home').innerHTML = `<div class="top"><div class="logo">Instagram</div><div class="r">${ic('heart')}${ic('send')}</div></div>${stories}${posts}<div style="height:120px"></div>`;
+}
+
+/* ============ PROFILE ============ */
+function renderProfile(){
+  const mine = POSTS.filter(p=>p.user===ME.user);
+  const hl = ['Friends','Summer','School','Music'].map((t,i)=>`<div class="st"><div class="ring"><div class="in"><div class="av" style="background:${GRADS[i+2]}"></div></div></div><span>${t}</span></div>`).join('');
+  const grid = mine.map(p=>`<div class="tile" data-c="${p.id}">${tile(p.ph)}${p.comments.length>4?`<div class="cm">${ic('cm')}${p.comments.length}</div>`:''}</div>`).join('');
+  $('#profile').innerHTML = `
+   <div class="ptop"><div class="u">${ME.user}${ic('chev')}</div><div class="r">${ic('plus')}${ic('menu')}</div></div>
+   <div class="pinfo"><div class="big"><div class="ring" style="width:86px;height:86px;background:none;padding:0">${av(ME.user)}</div></div>
+    <div class="stats"><div><b>${mine.length}</b><span>posts</span></div><div><b>7</b><span>followers</span></div><div><b>387</b><span>following</span></div></div></div>
+   <div class="bio"><b>${ME.name}</b>junior • 17<br>photos, music, whatever<br><span class="l">linktr.ee/${ME.user}</span></div>
+   <div class="pbtn"><div>Edit profile</div><div>Share profile</div><div class="sm">${ic('user')}</div></div>
+   <div class="hl">${hl}</div>
+   <div class="tabs"><div class="on">${ic('grid')}</div><div>${ic('reels')}</div><div>${ic('tag')}</div></div>
+   <div class="grid">${grid}</div><div style="height:120px"></div>`;
+}
+
+/* ============ COMMENTS ============ */
+let cur = null;
+function row(c,i,liked){
+  const [u,t,l,tm] = c, lk = liked.includes(i);
+  return `<div class="c">${av(u)}<div class="cb"><b>${u}</b>${esc(t)}<div class="s"><span>${tm}</span><b>${l+(lk?1:0)} likes</b><b>Reply</b></div></div>
+   <div class="hr ${lk?'lk':''}" data-l="${i}">${ic('heart')}<span>${l+(lk?1:0)}</span></div></div>`;
+}
+function openComments(id){
+  cur = POSTS[id]; cur.liked = cur.liked || [];
+  const p = cur;
+  $('#sheet').innerHTML = `<div class="sh">Comments<button class="x" id="cx">${ic('x')}</button></div>
+   <div class="cl" id="cl">${p.cap?`<div class="cap">${av(p.user)}<div class="cb"><b>${p.user}</b>${esc(p.cap)}<div class="s"><span>${p.time.toLowerCase().replace('ago','').trim()}</span></div></div></div><div class="sep"></div>`:''}
+   <div id="rows">${p.comments.map((c,i)=>row(c,i,p.liked)).join('')}</div></div>
+   <div class="inp">${av(ME.user)}<input id="ci" placeholder="Add a comment..." enterkeyhint="send" autocomplete="off"><button id="cs">Post</button></div>`;
+  $('#bk').classList.add('on'); $('#sheet').classList.add('on');
+  $('#cx').onclick = closeComments;
+  const inp = $('#ci'), btn = $('#cs');
+  inp.oninput = () => btn.classList.toggle('on', inp.value.trim().length>0);
+  const post = () => { const v = inp.value.trim(); if(!v) return;
+    p.comments.push([ME.user,v,0,'now']); inp.value=''; btn.classList.remove('on');
+    $('#rows').innerHTML = p.comments.map((c,i)=>row(c,i,p.liked)).join('');
+    $('#cl').scrollTop = 1e6; refresh(); };
+  btn.onclick = post; inp.onkeydown = e => { if(e.key==='Enter') post(); };
+}
+function closeComments(){ $('#bk').classList.remove('on'); $('#sheet').classList.remove('on'); document.activeElement && document.activeElement.blur(); }
+$('#bk').onclick = closeComments;
+$('#sheet').addEventListener('click',e=>{
+  const h = e.target.closest('[data-l]'); if(!h||!cur) return;
+  const i = +h.dataset.l, k = cur.liked.indexOf(i);
+  k<0 ? cur.liked.push(i) : cur.liked.splice(k,1);
+  $('#rows').innerHTML = cur.comments.map((c,j)=>row(c,j,cur.liked)).join('');
+});
+document.addEventListener('click',e=>{
+  const t = e.target.closest('[data-c]'); if(t) openComments(+t.dataset.c);
+});
+
+/* ============ NAV / ROUTING ============ */
+function renderNav(active){
+  const t = (n,inner) => `<button data-n="${n}" class="${n===active?'on':''}">${inner}</button>`;
+  $('#nav').innerHTML = `<div class="pill glass">${t('home',ic('home',active==='home'?'f':''))}${t('reels',ic('reels'))}${t('send',ic('send'))}${t('profile','<div class="pa">'+av(ME.user)+'</div>')}</div>
+   <button class="srch glass" data-n="search">${ic('search')}</button>`;
+}
+let view = 'home';
+function show(v){ view=v;
+  document.querySelectorAll('.view').forEach(x=>x.classList.toggle('on',x.id===v));
+  renderNav(v);
+}
+$('#nav').addEventListener('click',e=>{
+  const b = e.target.closest('[data-n]'); if(!b) return;
+  const n = b.dataset.n;
+  if(n==='home'||n==='profile'){ closeComments(); show(n); }
+});
+function refresh(){ const y1=$('#home').scrollTop,y2=$('#profile').scrollTop; renderHome(); renderProfile(); $('#home').scrollTop=y1; $('#profile').scrollTop=y2; }
+refresh(); show('home');
+
+/* ============ STATUS BAR ============ */
+const SIG='<svg width="18" height="12" viewBox="0 0 18 12" fill="#fff"><rect x="0" y="8" width="3" height="4" rx=".8"/><rect x="5" y="5.5" width="3" height="6.5" rx=".8"/><rect x="10" y="3" width="3" height="9" rx=".8"/><rect x="15" y="0" width="3" height="12" rx=".8"/></svg>';
+const BAT=`<svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.8" fill="none" stroke="#fff" opacity=".4"/><rect x="2" y="2" width="${(20*BATTERY/100).toFixed(1)}" height="9" rx="2.4" fill="#fff"/><path d="M25 4.4v4.2c.9-.3 1.6-1.2 1.6-2.1S25.9 4.7 25 4.4z" fill="#fff" opacity=".45"/><text x="12" y="9.8" text-anchor="middle" font-size="9" font-weight="700" fill="#000" font-family="-apple-system,Helvetica,sans-serif">${BATTERY}</text></svg>`;
+function clock(){ const d=new Date(); return (d.getHours()%12||12)+':'+String(d.getMinutes()).padStart(2,'0'); }
+if(SHOW_STATUS_BAR){
+  document.documentElement.style.setProperty('--sb','max(env(safe-area-inset-top,0px),47px)');
+  const sb=$('#sbar'); sb.classList.add('on'); if(TIME_LEFT) sb.classList.add('tl');
+  sb.innerHTML=`<span id="clk">${clock()}</span><span class="rg">${SIG}<span class="g5">5G</span>${BAT}</span>`;
+  if(!TIME_LEFT) sb.querySelector('#clk').style.marginRight='4px';
+  setInterval(()=>{$('#clk').textContent=clock()},5000);
+}
+
+</script>
+</body>
+</html>
